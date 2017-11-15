@@ -13,7 +13,7 @@ const meta = {
 };
 
 function init(weex) {
-  weex.registerModule('<%= upperCamelCaseName %>', <%= upperCamelCaseName %>, meta);
+  weex.registerModule('<%= lowerCamelCaseName %>', <%= upperCamelCaseName %>, meta);
 }
 
 export default {
