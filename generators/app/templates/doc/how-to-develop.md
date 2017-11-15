@@ -1,82 +1,108 @@
-# weex 插件开发套件
-- weex 插件开发套件旨在帮助用户快速，方便开发插件，一键集成，无需更改任何业务代码
+# Plugin Development Guide
+
+## Getting started
+
+1- Clone the project
+  ```
+  git clone https://github.com/<me>/<%= projectName %>
+  ```
+
+2- Install dependencies
+  ```
+  npm install -g weex-toolkit
+  weex update weex-devtool@latest
+  npm install
+  ```
+  For more detail, see [Setup Development Environment](https://weex.apache.org/guide/set-up-env.html).
+
+## Project structure
+
+The project structure is:
+```
+     ├── android   (Android native code project)
+     │    └── ...
+     ├── ios   (iOS native code project)
+     │    └── ...
+     ├── js   (html5 project)
+     │    └── ...
+     ├── examples   (sample app)
+     │    └── index.vue
+     ├── playground   (sample projects to test the plugin)
+     │    ├── android
+     │    ├── browser
+     │    └── ios
+     ├── <%= iOSProjectName %>.podspec   (iOS .podspec)
+     ├── package.json
+     ├── README.md
+  ```
+
+The `examples` directory contains a weex app that you can use to test your plugin. This test app will be loaded from the playground apps that are installed in the `playground` folder.
+
+## Web
+
+### Developing and testing with the playground app
+1. Build the example weex app in `examples/index.vue`:
+  ```
+
+  ```
+  Webpack will be listening for changes in `examples/index.vue` and re-build the example app for you. The app will be served in the port 12580 (e.g. http://localhost:12580).
+
+2. Edit the plugin JavaScript/HTML/CSS code under the `js` folder. Refresh the test app to update the plugin in the playground app.
+
+### Extending Web functionality
+See [Extend Web Render](https://weex.apache.org/guide/guide/extend-web-render.html).
+
+## Android
+
+### Developing and testing with the playground app
+1. Build the example weex app in `examples/index.vue`:
+  ```
+  npm run start:native
+  ```
+  Webpack will be listening for changes in `examples/index.vue` and re-build the example app for you.
+
+2. Open the android project under `playground/android` with Android Studio.
+
+  The native plugin code will be linked as a gradle dependency. You can develop and test the plugin directly from Android Studio. You can also use `weex debug` to debug the playground app.
+
+### Extending native functionality
+See [Extend Android](https://weex.apache.org/guide/extend-android.html).
 
 ## iOS
 
-### 如何开发插件
-- 通过weex初始化一个<%= iOSProjectName %>工程
-   ```
-   weex create dev <%= iOSProjectName %>
-   ```
-- 工程目录如下
-    ```
-     ├── android(Android插件工程)
-     │    ├── buid.gradle(android发布文件)
-     ├── ios(ios插件工程)
-     ├── js(h5插件工程)
-     ├── example(例子,开发者用来测试问题)
-     │    ├── android(demo)
-     │    ├── ios(demo)
-     │    ├── js(demo)
-     │    └── index.we
-     ├── ****.podspec(ios发布文件)
-     ├── start(weex编译命令)
-     ├── package.json(js发布文件)
-     ├── README.md
-   ```
-- 请在ios目录下用如下命令初始化ios工程
-```
-pod update
-```
-- 添加插件初测信息
-   - component示例
-   ```
-   WX_PlUGIN_EXPORT_MODULE(test, WPTestComponent)
-   ```
-   - module示例
-   ```
-   WX_PlUGIN_EXPORT_COMPONENT(test, WPTestModule)
-   ```
-   - Handler示例
-   ```
-   WX_PlUGIN_EXPORT_HANDLER(WPTestHandler, WXImgLoaderProtocol)
-   ```
-- 插件开发完成请在example/ios测试
-   - 初始化测试工程
-   ```
-   pod update
-   ```
-   - 检验测试结果,demo运行起来会在控制台输入下面类似信息
-   ```
-   2017-03-24 16:54:52.934 WeexDemo[88059:2693902] WPTestComponent register
-   2017-03-24 16:54:52.936 WeexDemo[88059:2693902] WXImgLoaderProtocol register
-   2017-03-24 16:54:52.937 WeexDemo[88059:2693902] WPTestModule register
-   ```
+### Developing and testing with the playground app
+1. Build the example weex app in `examples/index.vue`:
+  ```
+  npm run start:native
+  ```
+  Webpack will be listening for changes in `examples/index.vue` and re-build the example app for you.
 
-### 如何发布插件
-- 发布插件到cocoapods 仓库
-   - 已经默认创建好podspec，开发者在根目录通过如下命令检查iOS插件的正确性
+2. Open the iOS playground app and install the dependencies:
+  ```
+  cd playground/ios
+  pod install
+  ```
+3. Open `WeexDemo.xcworkspace` in Xcode.
+
+  The native plugin code will be linked as cocoa pod. You can develop and test the plugin directly from Xcode. You can also use `weex debug` to debug the playground app.
+
+### Extending native functionality
+See [Extend iOS](https://weex.apache.org/guide/extend-ios.html).
+
+### Publishing the plugin to the cocapods repository
+1. Edit the `<%= iOSProjectName %>.podspec` generated in the root of the plugin project.
+2. Check the correctness of the iOS plugin:
   ```
   pod spec lint --allow-warnings
   ```
-   - 发布插件到cocoapods 仓库
-   ```
-   pod trunk push --allow-warnings
-   ```
+3. Publish to cocoapods repository:
+  ```
+  pod trunk push --allow-warnings
+  ```
 
-### 如何发布插件到weex market
-- 通过weex命令发布
+## Publish the plugin in the weex market
+You can publish to the [Weex Market](https://weex.apache.org/tools/market.html) with the simple command:
 ```
 weex plugin publish
 ```
 
-### 如何集成插件<%= iOSProjectName %>
-- 命令行集成
-  ```
-  weex plugin add <%= iOSProjectName %>
-  ```
-- 手动集成
-  在podfile 中添加
-  ```
-  pod '<%= iOSProjectName %>'
-  ```
